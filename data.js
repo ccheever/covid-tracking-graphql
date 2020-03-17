@@ -39,6 +39,10 @@ async function refreshAsync() {
   });
   newData._updated = _updated;
   Data = newData;
+  return {
+    success: true,
+    updatedDateTime: _updated,
+  }
 }
 
 async function usDailyDataAsync() {

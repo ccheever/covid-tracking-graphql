@@ -1,5 +1,7 @@
 let { ApolloServer, gql } = require('apollo-server-express');
 let express = require('express');
+let luxon = require('luxon');
+let timeconstants = require('timeconstants');
 
 let data = require('./data');
 let resolvers = require('./resolvers');
@@ -42,9 +44,35 @@ app.get('/', async (req, res) => {
     <strong style="color: ${colors.primary};">😷 COVID-19 Tracking API</strong>
     <hr style="border: 1px solid ${colors.secondary};" />
     <a href="/graphql">/graphql</a>
+    <a href="/refresh">/refresh</a>
+    <a href="/status">/status</a>
   </body>
 </html>
     `);
+});
+
+app.get('/status', async (req, res) => {
+  res.json({
+    ok: true,
+    autoRefreshInterval: AutoRefreshInterval,
+    autoRefreshOn: !!_autoRefreshIntervalHandle,
+  });
+});
+
+let AutoRefreshInterval = 5 * timeconstants.minute;
+
+app.all('/refresh', async (req, res) => {
+  let result = await data.refreshAsync();
+  let interval = luxon.Duration.fromMillis(AutoRefreshInterval);
+  if (!!_autoRefreshIntervalHandle) {
+    result.note =
+      'This server will automatically refresh its data every ' +
+      interval.toString();
+  } else {
+    result.note =
+      'This server will currently only refresh data when manually instructed to do so';
+  }
+  res.json(result);
 });
 
 server.applyMiddleware({ app });
@@ -81,9 +109,24 @@ function handleCommandLineKeypresses(urls) {
   });
 }
 
+let _autoRefreshIntervalHandle = null;
+async function startAutoRefresh() {
+  _autoRefreshIntervalHandle = setInterval(() => {
+    // TODO: Add retries maybe?
+    data.refreshAsync();
+  }, AutoRefreshInterval);
+}
+
+async function stopAutoRefresh() {
+  if (_autoRefreshIntervalHandle) {
+    clearInterval(_autoRefreshIntervalHandle);
+  }
+}
+
 async function mainAsync() {
   // Before we do anything, populate our copy of the data from the source
   await data.refreshAsync();
+  startAutoRefresh();
 
   return new Promise((resolve, reject) => {
     app.listen({ port }, () => {
@@ -120,4 +163,7 @@ module.exports = {
   app,
   port,
   mainAsync,
+  startAutoRefresh,
+  stopAutoRefresh,
+  AutoRefreshInterval,
 };
