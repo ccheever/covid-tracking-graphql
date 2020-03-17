@@ -65,12 +65,9 @@ app.all('/refresh', async (req, res) => {
   let result = await data.refreshAsync();
   let interval = luxon.Duration.fromMillis(AutoRefreshInterval);
   if (!!_autoRefreshIntervalHandle) {
-    result.note =
-      'This server will automatically refresh its data every ' +
-      interval.toString();
+    result.note = 'This server will automatically refresh its data every ' + interval.toString();
   } else {
-    result.note =
-      'This server will currently only refresh data when manually instructed to do so';
+    result.note = 'This server will currently only refresh data when manually instructed to do so';
   }
   res.json(result);
 });
@@ -131,9 +128,7 @@ async function mainAsync() {
   return new Promise((resolve, reject) => {
     app.listen({ port }, () => {
       console.log(`😷 GraphQL API Server ready at http://localhost:${port}`);
-      console.log(
-        `🗂️  GraphQL Server ready at http://localhost:${port}${server.graphqlPath}`
-      );
+      console.log(`🗂️  GraphQL Server ready at http://localhost:${port}${server.graphqlPath}`);
 
       let localIp = require('local-ip');
       let myIp = localIp();

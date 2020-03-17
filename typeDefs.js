@@ -4,25 +4,81 @@ module.exports = gql`
   scalar DateTime
   scalar Date
 
-  type USDailyDataPoint {
-    date: Date
-    statesReporting: Int
-    positive: Int
-    negative: Int
-    positivePlusNegative: Int
+  enum PUI {
+    ALL_DATA
+    NO_DATA
+    ONLY_POSITIVES
+    POSITIVES_AND_NEGATIVES
+    UKNOWN
+  }
+
+  interface DataPoint {
+    positives: Int
+    negatives: Int
+    positivesPlusNegatives: Int
     pending: Int
     deaths: Int
     total: Int
   }
 
-  type Query {
-    hundred: Int
-    usDaily_forAllDays: [USDailyDataPoint]
-    usDaily_forDay(day: Date): USDailyDataPoint
-    usDaily_forDayRange(startDay: Date, endDay: Date): [USDailyDataPoint]
-    
-    
+  type USDailyDataPoint implements DataPoint {
+    date: Date
+    statesReporting: Int
+
+    positives: Int
+    negatives: Int
+    positivesPlusNegatives: Int
+    pending: Int
+    deaths: Int
+    total: Int
   }
 
+  type USTotalDataPoint implements DataPoint {
+    positives: Int
+    negatives: Int
+    positivesPlusNegatives: Int
+    pending: Int
+    deaths: Int
+    total: Int
+  }
 
+  type StateCumulativeDataPoint implements DataPoint {
+    state: State
+
+    positives: Int
+    negatives: Int
+    positivesPlusNegatives: Int
+    pending: Int
+    deaths: Int
+    total: Int
+
+    lastUpdated: DateTime
+    lastChecked: DateTime
+  }
+
+  type State {
+    abbrev: String
+    name: String
+    dataSite: String
+    covid19Site: String
+    twitter: String
+    pui: PUI
+    pum: Boolean
+    notes: String
+
+    cumulativeData: StateCumulativeDataPoint
+  }
+
+  type Query {
+    usCumulativeTotal: USTotalDataPoint
+    stateCumulativeData_forState(state: String!): StateCumulativeDataPoint
+    stateCumulativeData_forStates(statesList: [String!]): [StateCumulativeDataPoint]
+    stateCumulativeData_forAllStates: [StateCumulativeDataPoint]
+    usDailyData_forAllDays: [USDailyDataPoint]
+    usDailyData_forDay(day: Date): USDailyDataPoint
+    usDailyData_forDayRange(startDay: Date!, endDay: Date!): [USDailyDataPoint]
+    state(state: String!): State
+    allStates: [State]
+    _updated: DateTime
+  }
 `;
