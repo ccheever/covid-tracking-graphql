@@ -15,4 +15,5 @@ cd covid-tracking-graphql
 yarn
 yarn watch
 o
+g
 ```
