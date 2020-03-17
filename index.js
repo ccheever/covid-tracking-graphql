@@ -105,7 +105,9 @@ async function mainAsync() {
 if (require.main === module) {
   (async () => {
     let urls = await mainAsync();
-    handleCommandLineKeypresses(urls);
+    if (process.stdin.isTTY) {
+      handleCommandLineKeypresses(urls);
+    }
   })();
 }
 
