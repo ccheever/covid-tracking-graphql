@@ -118,12 +118,8 @@ async function statesDataAsync() {
 
 async function refreshAsync() {
   // TODO: Handle the failure case where this doesn't get updated in some reasonable
-  // way.
-  //
-  // This probably means doing retries with exponential backoff somehow
-  // and also making sure that we get a successful load of the data on startup
-  //
-  
+  // way. Maybe some kind of exponential backoff?
+
   let _updated = new Date();
   let newData = await promiseProps({
     usDaily: usDailyDataAsync(),
