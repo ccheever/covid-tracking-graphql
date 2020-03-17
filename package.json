@@ -1,0 +1,32 @@
+{
+  "name": "covid-tracking-graphql",
+  "version": "1.0.0",
+  "description": "Another GraphQL API for the COVID-19 Tracking Data",
+  "main": "index.js",
+  "repository": "https://github.com/ccheever/covid-tracking-graphql.git",
+  "author": "Charlie Cheever <ccheever@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node .",
+    "watch": "nodemon .",
+    "postinstall": "patch-package"
+  },
+  "repl": {
+    "ignore": {
+      "modules": [
+        "postinstall-postinstall"
+      ]
+    }
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2",
+    "project-repl": "^1.5.0"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.11.0",
+    "local-ip": "^2.0.0",
+    "open": "^7.0.3",
+    "patch-package": "^6.2.1",
+    "postinstall-postinstall": "^2.0.0"
+  }
+}
