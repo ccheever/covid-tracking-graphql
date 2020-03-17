@@ -24,9 +24,12 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.11.0",
+    "cross-fetch": "^3.0.4",
     "local-ip": "^2.0.0",
+    "luxon": "^1.22.0",
     "open": "^7.0.3",
     "patch-package": "^6.2.1",
-    "postinstall-postinstall": "^2.0.0"
+    "postinstall-postinstall": "^2.0.0",
+    "promise-props": "^1.0.0"
   }
 }

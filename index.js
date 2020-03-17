@@ -1,6 +1,7 @@
 let { ApolloServer, gql } = require('apollo-server-express');
 let express = require('express');
 
+let data = require('./data');
 let resolvers = require('./resolvers');
 let typeDefs = require('./typeDefs');
 
@@ -81,6 +82,9 @@ function handleCommandLineKeypresses(urls) {
 }
 
 async function mainAsync() {
+  // Before we do anything, populate our copy of the data from the source
+  await data.refreshAsync();
+
   return new Promise((resolve, reject) => {
     app.listen({ port }, () => {
       console.log(`😷 GraphQL API Server ready at http://localhost:${port}`);
