@@ -123,5 +123,11 @@ module.exports = {
     state: (_, {}, context, info) => {
       return data().stateInfo[_.__stateAbbrev];
     },
+    stateAbbrev: (_, {}, context, info) => {
+      return _.__stateAbbrev;
+    },
+    stateName: (_, {}, context, info) => {
+      return stateNames.names[_.__stateAbbrev];
+    },
   },
 };

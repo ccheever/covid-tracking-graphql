@@ -44,6 +44,8 @@ module.exports = gql`
 
   type StateCumulativeDataPoint implements DataPoint {
     state: State
+    stateAbbrev: String
+    stateName: String
 
     positives: Int
     negatives: Int
