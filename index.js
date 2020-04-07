@@ -43,6 +43,9 @@ app.get('/', async (req, res) => {
   <body>
     <strong style="color: ${colors.primary};">😷 COVID-19 Tracking API</strong>
     <hr style="border: 1px solid ${colors.secondary};" />
+    Data last updated ${data()._updated.toLocaleString(luxon.DateTime.DATETIME_FULL_WITH_SECONDS)}<br />
+    Currently attempting to refresh every ${AutoRefreshInterval / timeconstants.minute} minutes
+    <hr style="border: 1px solid ${colors.secondary};" />
     <a href="/graphql">/graphql</a>
     <a href="/refresh">/refresh</a>
     <a href="/status">/status</a>

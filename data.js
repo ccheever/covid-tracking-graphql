@@ -120,7 +120,7 @@ async function refreshAsync() {
   // TODO: Handle the failure case where this doesn't get updated in some reasonable
   // way. Maybe some kind of exponential backoff?
 
-  let _updated = new Date();
+  let _updated = luxon.DateTime.local();
   let newData = await promiseProps({
     usDaily: usDailyDataAsync(),
     stateInfo: stateInfoDataAsync(),
