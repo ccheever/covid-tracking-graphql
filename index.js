@@ -7,6 +7,8 @@ let data = require('./data');
 let resolvers = require('./resolvers');
 let typeDefs = require('./typeDefs');
 
+let port = process.env.PORT || 9110;
+
 let server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -44,12 +46,13 @@ app.get('/', async (req, res) => {
   <body>
     <strong style="color: ${colors.primary};">${title}</strong>
     <hr style="border: 1px solid ${colors.secondary};" />
-    Data last updated ${data()._updated.toLocaleString(luxon.DateTime.DATETIME_FULL_WITH_SECONDS)}<br />
-    Currently attempting to refresh every ${AutoRefreshInterval / timeconstants.minute} minutes
-    <hr style="border: 1px solid ${colors.secondary};" />
     <a href="/graphql">/graphql</a>
     <a href="/refresh">/refresh</a>
     <a href="/status">/status</a>
+    <hr style="border: 1px solid ${colors.secondary};" />
+    Data last updated ${data()._updated.toLocaleString(luxon.DateTime.DATETIME_FULL_WITH_SECONDS)}<br />
+    Currently attempting to refresh every ${AutoRefreshInterval / timeconstants.minute} minutes<br />
+    <a href="${getGitRepositoryURL()}" style="color: ${colors.subtle}; text-decoration: none;">${getGitRepositoryURL()}</a><br />
   </body>
 </html>
     `);
@@ -58,6 +61,7 @@ app.get('/', async (req, res) => {
 app.get('/status', async (req, res) => {
   res.json({
     ok: true,
+    gitRepositoryURL: getGitRepositoryUrl(),
     autoRefreshInterval: AutoRefreshInterval,
     autoRefreshOn: !!_autoRefreshIntervalHandle,
     lastUpdated: data()._updated,
@@ -79,7 +83,10 @@ app.all('/refresh', async (req, res) => {
 
 server.applyMiddleware({ app });
 
-let port = process.env.PORT || 9110;
+function getGitRepositoryURL() {
+  let pkg = require('./package');
+  return pkg.repository;
+}
 
 function handleCommandLineKeypresses(urls) {
   let readline = require('readline');
