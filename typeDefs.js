@@ -4,7 +4,7 @@ module.exports = gql`
   scalar DateTime
   scalar Date
 
-  enum PUI {
+  enum PUIReportingType {
     ALL_DATA
     NO_DATA
     ONLY_POSITIVES
@@ -64,8 +64,8 @@ module.exports = gql`
     dataSite: String
     covid19Site: String
     twitter: String
-    pui: PUI
-    pum: Boolean
+    puiReporting: PUIReportingType
+    pumReporting: Boolean
     notes: String
 
     cumulativeData: StateCumulativeDataPoint

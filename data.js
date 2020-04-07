@@ -72,8 +72,8 @@ function rawStateInfoToState(raw) {
     dataSite: raw.dataSite,
     covid19Site: raw.covid19Site,
     twitter: raw.twitter,
-    pui: mapPUI(raw.pui),
-    pum: raw.pum,
+    puiReporting: mapPUI(raw.pui),
+    pumReporting: raw.pum,
     notes: raw.notes,
   };
 }
