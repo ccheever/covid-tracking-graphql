@@ -120,7 +120,8 @@ async function refreshAsync() {
   // TODO: Handle the failure case where this doesn't get updated in some reasonable
   // way. Maybe some kind of exponential backoff?
 
-  let _updated = luxon.DateTime.local();
+  // Use `America/New_York` because the project mostly uses Eastern Time for times
+  let _updated = luxon.DateTime.local().setZone('America/New_York');
   let newData = await promiseProps({
     usDaily: usDailyDataAsync(),
     stateInfo: stateInfoDataAsync(),

@@ -30,10 +30,11 @@ let app = express();
 
 app.get('/', async (req, res) => {
   let colors = require('./colors');
+  let title = `😷 COVID-19 Tracking GraphQL API`;
   res.send(`
 <html>
   <head>
-    <title>😷 COVID-19 Tracking API</title>
+    <title>${title}</title>
     <style>
       BODY {
         font-family: monospace;
@@ -41,7 +42,7 @@ app.get('/', async (req, res) => {
     </style>
   </head>
   <body>
-    <strong style="color: ${colors.primary};">😷 COVID-19 Tracking API</strong>
+    <strong style="color: ${colors.primary};">${title}</strong>
     <hr style="border: 1px solid ${colors.secondary};" />
     Data last updated ${data()._updated.toLocaleString(luxon.DateTime.DATETIME_FULL_WITH_SECONDS)}<br />
     Currently attempting to refresh every ${AutoRefreshInterval / timeconstants.minute} minutes
@@ -59,6 +60,7 @@ app.get('/status', async (req, res) => {
     ok: true,
     autoRefreshInterval: AutoRefreshInterval,
     autoRefreshOn: !!_autoRefreshIntervalHandle,
+    lastUpdated: data()._updated,
   });
 });
 
