@@ -23,3 +23,26 @@ yarn watch
 o
 g
 ```
+
+### Using the GraphQL API
+
+
+You can go to `/graphql` from the root of what is served, or [visit it in production](https://covid-tracking-graphql-api.onrender.com/) to send GraphQL queries.
+
+An example query you could try is:
+
+gql```
+query {
+  state(state:"PA") {
+    name
+    cumulativeData {
+      total
+      positives
+      negatives
+    }
+    notes
+    puiReporting
+    pumReporting
+  }
+}
+```
