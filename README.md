@@ -31,7 +31,7 @@ You can go to `/graphql` from the root of what is served, or [visit it in produc
 
 An example query you could try is:
 
-gql```
+```graphql
 query {
   state(state:"PA") {
     name
