@@ -3,7 +3,7 @@ let express = require('express');
 let luxon = require('luxon');
 let timeconstants = require('timeconstants');
 
-let data = require('./data');
+let dataAsync = require('./dataAsync');
 let resolvers = require('./resolvers');
 let typeDefs = require('./typeDefs');
 
@@ -31,6 +31,7 @@ let server = new ApolloServer({
 let app = express();
 
 app.get('/', async (req, res) => {
+  let data = await dataAsync();
   let colors = require('./colors');
   let title = `😷 COVID-19 Tracking GraphQL API`;
   res.send(`
@@ -50,28 +51,31 @@ app.get('/', async (req, res) => {
     <a href="/refresh">/refresh</a>
     <a href="/status">/status</a>
     <hr style="border: 1px solid ${colors.secondary};" />
-    Data last updated ${data()._updated.toLocaleString(luxon.DateTime.DATETIME_FULL_WITH_SECONDS)}<br />
+    Data last updated ${data._updated.toLocaleString(luxon.DateTime.DATETIME_FULL_WITH_SECONDS)}<br />
     Currently attempting to refresh every ${AutoRefreshInterval / timeconstants.minute} minutes<br />
-    <a href="${getGitRepositoryURL()}" style="color: ${colors.subtle}; text-decoration: none;">${getGitRepositoryURL()}</a><br />
+    <a href="${getGitRepositoryURL()}" style="color: ${
+    colors.subtle
+  }; text-decoration: none;">${getGitRepositoryURL()}</a><br />
   </body>
 </html>
     `);
 });
 
 app.get('/status', async (req, res) => {
+  let data = await dataAsync();
   res.json({
     ok: true,
     gitRepositoryURL: getGitRepositoryUrl(),
     autoRefreshInterval: AutoRefreshInterval,
     autoRefreshOn: !!_autoRefreshIntervalHandle,
-    lastUpdated: data()._updated,
+    lastUpdated: data._updated,
   });
 });
 
 let AutoRefreshInterval = 5 * timeconstants.minute;
 
 app.all('/refresh', async (req, res) => {
-  let result = await data.refreshAsync();
+  let result = await dataAsync.refreshAsync();
   let interval = luxon.Duration.fromMillis(AutoRefreshInterval);
   if (!!_autoRefreshIntervalHandle) {
     result.note = 'This server will automatically refresh its data every ' + interval.toString();
@@ -122,7 +126,7 @@ let _autoRefreshIntervalHandle = null;
 async function startAutoRefresh() {
   _autoRefreshIntervalHandle = setInterval(() => {
     // TODO: Add retries maybe?
-    data.refreshAsync();
+    dataAsync.refreshAsync();
   }, AutoRefreshInterval);
 }
 
@@ -134,7 +138,7 @@ async function stopAutoRefresh() {
 
 async function mainAsync() {
   // Before we do anything, populate our copy of the data from the source
-  await data.refreshAsync();
+  await dataAsync.refreshAsync();
   startAutoRefresh();
 
   return new Promise((resolve, reject) => {

@@ -1,4 +1,4 @@
-let data = require('./data');
+let dataAsync = require('./dataAsync');
 let stateNames = require('./stateNames');
 
 function forceJSDate(day) {
@@ -11,16 +11,19 @@ function forceJSDate(day) {
 
 module.exports = {
   Query: {
-    _updated: (_, {}, context, info) => {
-      return data()._updated;
+    _updated: async (_, {}, context, info) => {
+      let data = await dataAsync();
+      return data._updated;
     },
 
     usDailyData_forAllDays: async (_, {}, context, info) => {
-      return data().usDaily;
+      let data = await dataAsync();
+      return data.usDaily;
     },
 
     usDailyData_forDay: async (_, { day }, context, info) => {
-      let usDaily = data().usDaily;
+      let data = await dataAsync();
+      let usDaily = data.usDaily;
       let day_ = forceJSDate(day);
       for (let dayData of usDaily) {
         if (+dayData.date === +day_) {
@@ -31,7 +34,8 @@ module.exports = {
     },
 
     usDailyData_forDayRange: async (_, { startDay, endDay }, context, info) => {
-      let usDaily = data().usDaily;
+      let data = await dataAsync();
+      let usDaily = data.usDaily;
       let startDayMoment = +forceJSDate(startDay);
       let endDayMoment = +forceJSDate(endDay);
       let result = [];
@@ -45,7 +49,8 @@ module.exports = {
     },
 
     state: async (_, { state }, context, info) => {
-      let stateInfo = data().stateInfo;
+      let data = await dataAsync();
+      let stateInfo = data.stateInfo;
       for (let abbrev in stateInfo) {
         let stateData = stateInfo[abbrev];
         if (stateData.abbrev === state || stateData.name === state) {
@@ -55,7 +60,8 @@ module.exports = {
     },
 
     allStates: async (_, {}, context, info) => {
-      let stateInfo = data().stateInfo;
+      let data = await dataAsync();
+      let stateInfo = data.stateInfo;
       let results = [];
       for (let abbrev in stateInfo) {
         let stateData = stateInfo[abbrev];
@@ -65,12 +71,13 @@ module.exports = {
     },
 
     usCumulativeTotal: async (_, {}, context, info) => {
-      return data().usTotal;
+      let data = await dataAsync();
+      return data.usTotal;
     },
 
     stateCumulativeData_forAllStates: async (_, {}, context, info) => {
       let results = [];
-      let statesData = data().statesData;
+      let statesData = data.statesData;
       for (let abbrev in statesData) {
         results.push(statesData[abbrev]);
       }
@@ -78,7 +85,8 @@ module.exports = {
     },
 
     stateCumulativeData_forState: async (_, { state }, context, info) => {
-      let statesData = data().statesData;
+      let data = await dataAsync();
+      let statesData = data.statesData;
       for (let abbrev in statesData) {
         let stateData = statesData[abbrev];
         if (stateNames.matches(state, abbrev)) {
@@ -89,8 +97,9 @@ module.exports = {
     },
 
     stateCumulativeData_forStates: async (_, { statesList }, context, info) => {
+      let data = await dataAsync();
       let results = [];
-      let statesData = data().statesData;
+      let statesData = data.statesData;
       for (let abbrev in statesData) {
         let stateData = statesData[abbrev];
         if (stateNames.matches(state, stateData.__stateAbbrev)) {
@@ -115,13 +124,15 @@ module.exports = {
 
   State: {
     cumulativeData: async (_, {}, context, info) => {
-      return data().statesData[_.abbrev];
+      let data = await dataAsync();
+      return data.statesData[_.abbrev];
     },
   },
 
   StateCumulativeDataPoint: {
-    state: (_, {}, context, info) => {
-      return data().stateInfo[_.__stateAbbrev];
+    state: async (_, {}, context, info) => {
+      let data = await dataAsync();
+      return data.stateInfo[_.__stateAbbrev];
     },
     stateAbbrev: (_, {}, context, info) => {
       return _.__stateAbbrev;
