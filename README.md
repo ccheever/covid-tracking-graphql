@@ -4,7 +4,7 @@ Another GraphQL API for the COVID-19 Tracking Data
 
 ### To use in the cloud
 
-https://covid-tracking-graphql-api.onrender.com/
+https://ccheever-covid-tracking-graphql.netlify.com/.netlify/functions/graphql
 
 
 ### To get started developing locally
@@ -27,9 +27,19 @@ g
 ### Using the GraphQL API
 
 
-You can go to `/graphql` from the root of what is served, or [visit it in production](https://covid-tracking-graphql-api.onrender.com/) to send GraphQL queries.
+You can go to `/graphql` from the root of what is served, or [visit it in production](https://ccheever-covid-tracking-graphql.netlify.com/.netlify/functions/graphql) to send GraphQL queries.
 
 An example query you could try is:
+
+```graphql
+query {
+  usCumulativeTotal {
+    deaths
+  }
+}
+```
+
+or a more complicated one could be:
 
 ```graphql
 query {
@@ -46,3 +56,21 @@ query {
   }
 }
 ```
+
+### Testing Netlify Functions Behavior
+
+This repository is also configured to run GraphQL queries as a Netlify function. You can test this by running
+
+```sh
+yarn build
+npx netlify-cli dev
+```
+
+And then visiting the URL
+
+`http://localhost:<PORT>/.netlify/functions/graphql`
+
+(with `<PORT>` replaced appropriately)
+
+You need to do a rebuild every time you change the code for it to show up, so this is not necessarily recommended for development, but it can be useful for testing.
+
