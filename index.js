@@ -32,7 +32,12 @@ let app = express();
 
 app.get('/', async (req, res) => {
   let data = await dataAsync();
-  let colors = require('./colors');
+  let colors = {
+    primary: '#00539cff',
+    secondary: '#eea47fff',
+    subtle: '#bbbbbb',
+  };
+
   let title = `😷 COVID-19 Tracking GraphQL API`;
   res.send(`
 <html>
