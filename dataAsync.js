@@ -2,6 +2,19 @@ let fetch = require('cross-fetch');
 let luxon = require('luxon');
 let promiseProps = require('promise-props');
 
+// TODO: Make this smarter so that we don't always 
+// fetch all the data we might ever need before serving
+// a query. We should fetch on demand based on the 
+// things that the query requires, then keep that 
+// in something like a DataLoader so that we don't 
+// refetch it.
+//
+// The approach we have implemented here is not great
+// but is better than a lot of things might be since
+// it fetches everything in parallel as soon as any 
+// data is needed, and then keeps all of that around
+// for the lifetime of the request
+
 let Data = null;
 
 async function getJSONAsync(url) {

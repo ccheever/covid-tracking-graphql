@@ -9,7 +9,9 @@
   "scripts": {
     "start": "node .",
     "watch": "nodemon .",
-    "postinstall": "patch-package"
+    "build": "yarn && netlify-lambda build functions",
+    "postinstall": "patch-package",
+    "netlify-build-functions": "netlify-lambda build functions"
   },
   "repl": {
     "ignore": {
@@ -19,10 +21,13 @@
     }
   },
   "devDependencies": {
+    "netlify-cli": "^2.43.0",
+    "netlify-lambda": "^1.6.3",
     "nodemon": "^2.0.2",
     "project-repl": "^1.5.0"
   },
   "dependencies": {
+    "@netlify/zip-it-and-ship-it": "^0.3.1",
     "apollo-server-express": "^2.11.0",
     "apollo-server-lambda": "^2.12.0",
     "cross-fetch": "^3.0.4",
