@@ -33,7 +33,7 @@
     "cross-fetch": "^3.0.4",
     "encoding": "^0.1.12",
     "local-ip": "^2.0.0",
-    "luxon": "^1.22.0",
+    "luxon": "^2.5.2",
     "open": "^7.0.3",
     "patch-package": "^6.2.1",
     "postinstall-postinstall": "^2.0.0",
